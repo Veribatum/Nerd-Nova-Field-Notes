@@ -1,0 +1,88 @@
+{
+  "version": 1,
+  "categories": [
+    {
+      "id": "commands",
+      "name": "Commands",
+      "icon": "⌘"
+    },
+    {
+      "id": "troubleshooting",
+      "name": "Troubleshooting",
+      "icon": "🔧"
+    },
+    {
+      "id": "procedures",
+      "name": "Procedures",
+      "icon": "☑"
+    },
+    {
+      "id": "networking",
+      "name": "Networking",
+      "icon": "◎"
+    },
+    {
+      "id": "lessons",
+      "name": "Lessons Learned",
+      "icon": "✦"
+    }
+  ],
+  "notes": [
+    {
+      "id": "note-grep",
+      "title": "Search for text inside files",
+      "category": "commands",
+      "tags": [
+        "grep",
+        "search",
+        "logs"
+      ],
+      "command": "grep -rn \"error\" /var/log/",
+      "body": "- `grep` searches text for a matching pattern.\n- `-r` searches recursively through subfolders.\n- `-n` prints matching line numbers.\n- Substitute a relevant search term and directory.\n- Some log files require elevated permission.",
+      "gotcha": "Quote search phrases containing spaces. Large searches may return lots of output.",
+      "updated": "2026-10-23"
+    },
+    {
+      "id": "note-ssh",
+      "title": "SSH into a VirtualBox RHEL lab VM",
+      "category": "networking",
+      "tags": [
+        "ssh",
+        "virtualbox",
+        "rhel"
+      ],
+      "command": "ssh -p 2222 user@127.0.0.1",
+      "body": "Example for a personal lab VM with NAT port forwarding from host port 2222 to guest port 22. Replace `user` with your lab username.",
+      "gotcha": "Port 2222 is on the host; SSH inside the guest typically listens on port 22. Use your actual forwarding rule.",
+      "updated": "2026-10-23"
+    },
+    {
+      "id": "note-pager",
+      "title": "Exit long command output",
+      "category": "lessons",
+      "tags": [
+        "less",
+        "pager",
+        "terminal"
+      ],
+      "command": "q",
+      "body": "Some terminal commands display output using the `less` pager. Press `q` to return to the shell prompt. `q` is a keypress, not a command to type at the shell.",
+      "gotcha": "If the screen appears frozen in a long listing, check whether a pager is open.",
+      "updated": "2026-10-23"
+    },
+    {
+      "id": "note-ip",
+      "title": "Show interface addresses",
+      "category": "commands",
+      "tags": [
+        "ip",
+        "interfaces",
+        "rhel"
+      ],
+      "command": "ip -br addr",
+      "body": "Shows a concise summary of network interfaces, their states, and addresses. Useful as a first check when troubleshooting connectivity.",
+      "gotcha": "The address alone does not prove the interface can reach the destination.",
+      "updated": "2026-10-23"
+    }
+  ]
+}
