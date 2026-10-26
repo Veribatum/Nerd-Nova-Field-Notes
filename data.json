@@ -83,6 +83,126 @@
       "body": "Shows a concise summary of network interfaces, their states, and addresses. Useful as a first check when troubleshooting connectivity.",
       "gotcha": "The address alone does not prove the interface can reach the destination.",
       "updated": "2026-10-23"
+    },
+    {
+      "id": "notebook-nmcli-status",
+      "title": "Check NetworkManager device status",
+      "category": "networking",
+      "tags": [
+        "nmcli",
+        "status"
+      ],
+      "command": "nmcli device status",
+      "body": "Lists NetworkManager-known devices and their connection states. Use to spot disconnected or unmanaged interfaces.",
+      "gotcha": "An unmanaged device may be controlled elsewhere, including Open vSwitch.",
+      "updated": "2026-10-26"
+    },
+    {
+      "id": "notebook-nmcli-fields",
+      "title": "Show selected NetworkManager connection fields",
+      "category": "networking",
+      "tags": [
+        "nmcli",
+        "profiles"
+      ],
+      "command": "nmcli -f NAME,UUID,TYPE,DEVICE connection show",
+      "body": "Lists saved/active connection profiles with name, UUID, type, and associated device. Compare with `nmcli device status` when a connection is missing.",
+      "gotcha": "A saved profile is not necessarily active. The DEVICE column may show --.",
+      "updated": "2026-10-26"
+    },
+    {
+      "id": "notebook-nmcli-connection-up",
+      "title": "Activate a NetworkManager connection",
+      "category": "procedures",
+      "tags": [
+        "nmcli",
+        "connectivity"
+      ],
+      "command": "sudo nmcli connection up \"PROFILE_NAME\"",
+      "body": "Brings up a specified saved NetworkManager connection profile. Substitute the exact profile name as shown by `nmcli connection show`.",
+      "gotcha": "This can interrupt connectivity; on remote systems, confirm the correct profile and have an approved recovery path.",
+      "updated": "2026-10-26"
+    },
+    {
+      "id": "notebook-nmcli-address",
+      "title": "Set static IPv4 address on a connection profile",
+      "category": "procedures",
+      "tags": [
+        "nmcli",
+        "ipv4",
+        "static"
+      ],
+      "command": "sudo nmcli connection modify \"PROFILE_NAME\" ipv4.addresses \"192.0.2.10/24\"",
+      "body": "Changes the IPv4 address stored in the selected NetworkManager profile. This example uses the documentation-only TEST-NET-1 range. You may also need to set `ipv4.method manual` and activate the profile for the change to apply.",
+      "gotcha": "Modifying a profile is not the same as applying it. Do not copy addresses from operational systems.",
+      "updated": "2026-10-26"
+    },
+    {
+      "id": "notebook-nmcli-routes",
+      "title": "Set a static IPv4 route via NetworkManager",
+      "category": "procedures",
+      "tags": [
+        "nmcli",
+        "routes"
+      ],
+      "command": "sudo nmcli connection modify \"PROFILE_NAME\" +ipv4.routes \"198.51.100.0/24 192.0.2.1\"",
+      "body": "Adds a static route to a connection profile. The first address is the destination network; the second is the next-hop gateway. Both are documentation example addresses.",
+      "gotcha": "Use +ipv4.routes to append rather than replace existing routes. Check routing before applying.",
+      "updated": "2026-10-26"
+    },
+    {
+      "id": "notebook-ip-route",
+      "title": "Display IPv4 routing table",
+      "category": "networking",
+      "tags": [
+        "ip",
+        "routing"
+      ],
+      "command": "ip -4 route show",
+      "body": "Shows the kernel IPv4 routing table. Useful to verify the current default route, destination networks, gateways and interfaces.",
+      "gotcha": "This shows active kernel routes, which may differ from saved connection profiles.",
+      "updated": "2026-10-26"
+    },
+    {
+      "id": "notebook-nmcli-ip4",
+      "title": "Show IPv4 properties for a NetworkManager device",
+      "category": "networking",
+      "tags": [
+        "nmcli",
+        "ipv4",
+        "diagnostic"
+      ],
+      "command": "nmcli -f GENERAL,IP4 device show \"INTERFACE_NAME\"",
+      "body": "Displays general details and IPv4 information of a chosen network interface. Substitute an actual interface name from `nmcli device status`.",
+      "gotcha": "Use `nmcli device show` for device state; `nmcli connection show` describes saved profiles.",
+      "updated": "2026-10-26"
+    },
+    {
+      "id": "notebook-ip-brief",
+      "title": "Show addresses in compact form",
+      "category": "networking",
+      "tags": [
+        "ip",
+        "interfaces"
+      ],
+      "command": "ip -br address",
+      "body": "Shows interface names, states, and assigned addresses in a compact display. Helpful when comparing multiple devices quickly.",
+      "gotcha": "An assigned IP address does not establish route or connectivity.",
+      "updated": "2026-10-26"
+    },
+    {
+      "id": "notebook-ip-link",
+      "title": "List Layer 2 interfaces",
+      "category": "networking",
+      "tags": [
+        "ip",
+        "interfaces",
+        "bridge"
+      ],
+      "command": "ip -d link show",
+      "body": "Shows detailed network link attributes and interface state. Useful when diagnosing virtual interfaces or bridges.",
+      "gotcha": "Some properties require additional commands or privileges to inspect.",
+      "updated": "2026-10-26"
     }
   ]
 }
