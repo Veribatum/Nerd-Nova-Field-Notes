@@ -203,6 +203,111 @@
       "body": "Shows detailed network link attributes and interface state. Useful when diagnosing virtual interfaces or bridges.",
       "gotcha": "Some properties require additional commands or privileges to inspect.",
       "updated": "2026-10-26"
+    },
+    {
+      "id": "manta-lesson-evidence",
+      "title": "Troubleshoot from the real error, not assumptions",
+      "category": "lessons",
+      "tags": [
+        "python",
+        "debugging",
+        "ssh",
+        "lessons-learned"
+      ],
+      "command": "grep -nE 'ERROR|WARNING|Traceback' ~/example-app.log | tail -30",
+      "body": "Reproduce the issue, then open the actual application log. Capture the full exception and the operation that triggered it. A successful SSH connection does not prove a later identity lookup succeeded. Fix the line that raises the exception and verify the full workflow afterward. Example: `must be str or None, not list` can arise when a list is passed into a string API, including `text.split([-1])` instead of `text.split()[-1]`.",
+      "gotcha": "The same error text can have multiple causes. Trace it to the failing line before editing. Use sanitized logs only.",
+      "updated": "2026-11-05"
+    },
+    {
+      "id": "manta-lesson-split",
+      "title": "Python: split a label and select its last word",
+      "category": "commands",
+      "tags": [
+        "python",
+        "split",
+        "type-error"
+      ],
+      "command": "label = 'UNIT 24'\nnumber = label.split()[-1]  # '24'",
+      "body": "`split()` without arguments separates a string on whitespace and returns a list of words. `[-1]` indexes the last item of that list. Writing `split([-1])` passes a list as the separator and raises `TypeError: must be str or None, not list`.",
+      "gotcha": "Check that the string is nonempty before using `[-1]` if the input can be blank.",
+      "updated": "2026-11-05"
+    },
+    {
+      "id": "manta-lesson-ssh-types",
+      "title": "Python subprocess and SSH: command argument types",
+      "category": "troubleshooting",
+      "tags": [
+        "python",
+        "ssh",
+        "subprocess",
+        "types"
+      ],
+      "command": "args = ['ssh', 'user@192.0.2.10', 'cat /path/to/example.env']\nresult = subprocess.run(args, capture_output=True, check=True)\ntext = result.stdout.decode('utf-8', errors='replace')",
+      "body": "`subprocess.run()` accepts a list of local executable arguments. The SSH destination and remote shell command are each individual string arguments. Read the helper's function signature before replacing a remote command string with a list. Captured stdout is commonly bytes unless text mode is enabled; decode it before passing to a text parser.",
+      "gotcha": "A Python list is correct for the local subprocess argument vector, but a custom SSH helper may require the remote command itself as one string. Documentation-only address shown.",
+      "updated": "2026-11-05"
+    },
+    {
+      "id": "manta-lesson-ip",
+      "title": "Do not assume a remote computer is at subnet +2",
+      "category": "networking",
+      "tags": [
+        "discovery",
+        "ipv4",
+        "routing",
+        "ssh"
+      ],
+      "command": "ip -br -4 addr\nip route get 192.0.2.70\nping -c 3 192.0.2.70",
+      "body": "A subnet such as 192.0.2.0/24 defines an address range, not the active host's last octet. Identify the intended host from approved configuration or inventory, then validate reachability and service availability separately. Ping success, SSH reachability, SSH authentication, and application identity are four different checks.",
+      "gotcha": "Do not scan broad operational address ranges without authorization. An address may be reassigned; never assume an IP permanently identifies a system.",
+      "updated": "2026-11-05"
+    },
+    {
+      "id": "manta-lesson-output",
+      "title": "Keep verified output separate from temporary transfer jobs",
+      "category": "procedures",
+      "tags": [
+        "transfers",
+        "sha256",
+        "cleanup",
+        "resume"
+      ],
+      "command": "sha256sum ~/example-test.txt\nfind ~/Downloads -maxdepth 2 -type f -name 'example-test.txt' -print",
+      "body": "Stage transfer chunks, resume state, logs and manifests in a private temporary job directory. Reassemble and SHA-256-verify the original files, then publish only the verified payload into a human-readable destination folder. Retain recovery state for interrupted jobs; delete temp artifacts only after success. Example naming: `05NOV2026_1452_UNIT_24_transfer/example-test.txt`.",
+      "gotcha": "Do not delete temporary data before successful verification, and do not delete user data during cleanup. Avoid renaming across filesystems without a safe copy/verify fallback.",
+      "updated": "2026-11-05"
+    },
+    {
+      "id": "manta-lesson-hardware-tests",
+      "title": "MANTA non-destructive acceptance-test checklist",
+      "category": "procedures",
+      "tags": [
+        "manta",
+        "acceptance-test",
+        "rhel",
+        "qa"
+      ],
+      "command": "printf 'test payload\\n' > ~/example-test.txt\nsha256sum ~/example-test.txt",
+      "body": "On approved lab or test systems: (1) verify local node banner and application version; (2) discover multiple sources and connect to each with approved credentials; (3) confirm each source is labeled by its actual node identity; (4) transfer a small text file, then compare hashes; (5) inspect date/time + source folder naming and ensure the file is directly inside; (6) test a folder with nested files and file-size display; (7) test rsync and SCP separately; (8) test permitted bandwidth/compression choices; (9) test cancel/resume using disposable data; (10) check logs and recovery behavior after a deliberate failed test. Record expected/actual and PASS/FAIL for each.",
+      "gotcha": "Keep test data sanitized and disposable. Avoid production-like disruptions, unapproved configuration changes, or transfers across classification boundaries.",
+      "updated": "2026-11-05"
+    },
+    {
+      "id": "manta-lesson-code-inspection",
+      "title": "Locate relevant Python code and validate a build",
+      "category": "commands",
+      "tags": [
+        "grep",
+        "sed",
+        "py-compile",
+        "tar",
+        "sha256"
+      ],
+      "command": "grep -nE 'def remote_run|def remember_node' app.py\nsed -n '100,140p' app.py\npython3 -m py_compile app.py\ntar -tzf build.tar.gz\nsha256sum build.tar.gz",
+      "body": "`grep -nE` locates relevant functions with line numbers; `sed -n` prints the nearby section; `py_compile` checks syntax but does not prove runtime correctness; `tar -tzf` lists archive contents without extracting; `sha256sum` produces a checksum for integrity comparison. Keep last known-good build for rollback.",
+      "gotcha": "Compilation is not a functional test. Compare checksums at the receiving end and follow approved media-scan procedures.",
+      "updated": "2026-11-05"
     }
   ]
 }
