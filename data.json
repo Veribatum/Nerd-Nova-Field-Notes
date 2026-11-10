@@ -311,11 +311,11 @@
     },
     {
       "id": "field-voip-one-way-audio-2026-11-10",
-      "title": "VoIP: one-way audio and push-to-talk setup",
+      "title": "VoIP one-way audio — FIX: check receiver output device",
       "category": "troubleshooting",
       "command": "",
-      "body": "Symptom: Text communications work and one party hears incoming voice, but the other party cannot hear transmitted voice. Network interfaces can show up while audio still fails.\n\nActual fix in this case: The receiving party had not selected the correct audio output device in the VoIP application. Set the receiving side's output/playback device correctly and retest.\n\nPush-to-talk (PTT) setup reminder:\n1. Click the Talk-to-Tech / Push-to-Talk checkbox or control.\n2. When prompted to choose the PTT button, PRESS the physical button or keyboard key you intend to use.\n3. Confirm only after the application has registered that button/key; do NOT simply click OK without pressing it.\n4. Test the PTT button and audio in both directions.\n\nThis PTT setup is an important separate check; it was NOT the root cause of this incident.",
-      "gotcha": "Always check BOTH ends: sender microphone/input and PTT binding, plus receiver speaker/output-device selection. A live microphone level meter does not prove the remote end has selected the correct playback device.",
+      "body": "CONFIRMED SOLUTION — RECEIVING PARTY AUDIO OUTPUT DEVICE\nThe receiving operator had the wrong audio output/playback device selected in the in-house VoIP application. Selecting the correct output device on the RECEIVING side restored two-way voice communication. This was the actual fix, NOT the PTT button assignment.\n\nSYMPTOMS\n- Text worked both ways.\n- We could hear the other party, but they could not hear us.\n- Interfaces were up; equipment had been power cycled without resolving the issue.\n\nPUSH-TO-TALK BUTTON SETUP (SEPARATE REMINDER)\n1. Click the Talk-to-Tech / Push-to-Talk checkbox.\n2. A prompt asks which button to use for push-to-talk.\n3. PHYSICALLY PRESS the intended PTT button/key when prompted so the application registers it.\n4. Do NOT just click OK without pressing the intended button.\n5. Confirm the key assignment and test voice in both directions.\n\nFIELD CHECK: On a one-way-audio report, confirm the receiving party's selected output/playback device as well as sender input and PTT binding.",
+      "gotcha": "ROOT CAUSE IN THIS INCIDENT: receiver-side output device was not properly selected. PTT binding is a separate setup procedure, not the fix.",
       "tags": [
         "voip",
         "ptt",
