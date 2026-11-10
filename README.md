@@ -8,7 +8,7 @@ Repository Settings → Pages → Build and deployment → Deploy from a branch 
 
 ## Editing from mobile or desktop
 
-Open the app and choose **⚙ Sync**. Create a GitHub fine-grained personal access token restricted to this repository, with **Contents: Read and write** permission. Use the token in the Sync screen. The token stays in this browser tab's session storage and is not committed to the repository. Use **Disconnect** when finished. You may need to reconnect on a new device/tab.
+Open the app and choose **⚙ Sync**. Create a GitHub fine-grained personal access token restricted to this repository, with **Contents: Read and write** permission. Use the token in the Sync screen. Select **Remember connection on this trusted device** to save the fine-grained token in that device's browser local storage, so later note edits do not require reconnecting. Only use this on a private trusted device; otherwise the token stays in session storage. Use **Disconnect** to erase both saved forms. Each separate device needs one initial authorization. The token is never committed to the repository.
 
 The app saves note and category changes to `data.json` using GitHub's Contents API, creating a commit on `main`. Public read access works without a token. GitHub Pages deploys the new notes after each commit. Manual editing of `data.json` concurrently with the app can cause conflicts; verify recent changes before large edits.
 
