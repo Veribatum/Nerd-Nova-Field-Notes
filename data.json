@@ -314,7 +314,7 @@
       "title": "VoIP one-way audio — FIX: check receiver output device",
       "category": "troubleshooting",
       "command": "",
-      "body": "CONFIRMED SOLUTION — RECEIVING PARTY AUDIO OUTPUT DEVICE\nThe receiving operator had the wrong audio output/playback device selected in the in-house VoIP application. Selecting the correct output device on the RECEIVING side restored two-way voice communication. This was the actual fix, NOT the PTT button assignment.\n\nSYMPTOMS\n- Text worked both ways.\n- We could hear the other party, but they could not hear us.\n- Interfaces were up; equipment had been power cycled without resolving the issue.\n\nPUSH-TO-TALK BUTTON SETUP (SEPARATE REMINDER)\n1. Click the Talk-to-Tech / Push-to-Talk checkbox.\n2. A prompt asks which button to use for push-to-talk.\n3. PHYSICALLY PRESS the intended PTT button/key when prompted so the application registers it.\n4. Do NOT just click OK without pressing the intended button.\n5. Confirm the key assignment and test voice in both directions.\n\nFIELD CHECK: On a one-way-audio report, confirm the receiving party's selected output/playback device as well as sender input and PTT binding.",
+      "body": "CONFIRMED SOLUTION — RECEIVING PARTY AUDIO OUTPUT DEVICE\nThe receiving operator had the wrong audio output/playback device selected in the in-house VoIP application. Selecting the correct output device on the RECEIVING side restored two-way voice communication. This was the actual fix, NOT the PTT button assignment.\n\nSYMPTOMS\n- Text worked both ways.\n- We could hear the other party, but they could not hear us.\n- Interfaces were up; equipment had been power cycled without resolving the issue.\n\nPUSH-TO-TALK BUTTON SETUP (SEPARATE REMINDER)\n1. Click the Talk-to-Tech / Push-to-Talk checkbox.\n2. A prompt asks which button to use for push-to-talk.\n3. PHYSICALLY PRESS the intended PTT button/key when prompted so the application registers it.\n4. Do NOT just click OK without pressing the intended button.\n5. Confirm the key assignment and test voice in both directions.\n\nFIELD CHECK: On a one-way-audio report, confirm the receiving party's selected output/playback device as well as sender input and PTT binding.\n\nRHEL PACKET COUNTERS — QUICK CHECK\nRun: ip -s link\nThis displays RX/TX packet, byte, error and dropped-packet counters for each network interface. Find the active interface, note TX packets, trigger push-to-talk, and run the command again. Compare whether TX packets increase and whether errors/drops rise. These are whole-interface counters: increasing TX packets does not by itself prove that VoIP audio packets were sent.\n\nFor packet-level VoIP checks, capture on the approved interface with Wireshark and start with the display filter: udp. Compare traffic while PTT is active versus inactive. Use only authorized captures and avoid recording operational addresses or packet contents in public field notes.",
       "gotcha": "ROOT CAUSE IN THIS INCIDENT: receiver-side output device was not properly selected. PTT binding is a separate setup procedure, not the fix.",
       "tags": [
         "voip",
@@ -323,7 +323,10 @@
         "one-way audio",
         "audio output",
         "lite node",
-        "field troubleshooting"
+        "field troubleshooting",
+        "ip -s link",
+        "packet counters",
+        "wireshark"
       ],
       "updated": "2026-11-10"
     }
