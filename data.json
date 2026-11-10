@@ -308,6 +308,24 @@
       "body": "`grep -nE` locates relevant functions with line numbers; `sed -n` prints the nearby section; `py_compile` checks syntax but does not prove runtime correctness; `tar -tzf` lists archive contents without extracting; `sha256sum` produces a checksum for integrity comparison. Keep last known-good build for rollback.",
       "gotcha": "Compilation is not a functional test. Compare checksums at the receiving end and follow approved media-scan procedures.",
       "updated": "2026-11-05"
+    },
+    {
+      "id": "field-voip-one-way-audio-2026-11-10",
+      "title": "VoIP: one-way audio and push-to-talk setup",
+      "category": "troubleshooting",
+      "command": "",
+      "body": "Symptom: Text communications work and one party hears incoming voice, but the other party cannot hear transmitted voice. Network interfaces can show up while audio still fails.\n\nActual fix in this case: The receiving party had not selected the correct audio output device in the VoIP application. Set the receiving side's output/playback device correctly and retest.\n\nPush-to-talk (PTT) setup reminder:\n1. Click the Talk-to-Tech / Push-to-Talk checkbox or control.\n2. When prompted to choose the PTT button, PRESS the physical button or keyboard key you intend to use.\n3. Confirm only after the application has registered that button/key; do NOT simply click OK without pressing it.\n4. Test the PTT button and audio in both directions.\n\nThis PTT setup is an important separate check; it was NOT the root cause of this incident.",
+      "gotcha": "Always check BOTH ends: sender microphone/input and PTT binding, plus receiver speaker/output-device selection. A live microphone level meter does not prove the remote end has selected the correct playback device.",
+      "tags": [
+        "voip",
+        "ptt",
+        "push-to-talk",
+        "one-way audio",
+        "audio output",
+        "lite node",
+        "field troubleshooting"
+      ],
+      "updated": "2026-11-10"
     }
   ]
 }
