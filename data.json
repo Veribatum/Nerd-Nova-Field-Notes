@@ -329,6 +329,71 @@
         "wireshark"
       ],
       "updated": "2026-11-10"
+    },
+    {
+      "id": "field-node-config-basics-20261112",
+      "title": "Node setup: locate, inspect, and edit configuration",
+      "category": "procedures",
+      "command": "cd /path/to/approved/config-directory\nls -l\nsudo vim /path/to/approved/config.env",
+      "body": "PURPOSE: Locate setup files and inspect/edit an approved node configuration.\n\n1. cd changes the current directory; tab completion helps avoid typing long paths.\n2. ls -l lists entries, owner, group, size, and permissions. Use ls -la to include hidden files.\n3. sudo vim opens a file as an administrator. Only edit the specifically approved settings. In Vim: i = insert mode; Esc = leave insert mode; :wq = save and quit; :q! = quit without saving.\n4. Confirm the setting name and value with the approved build reference. Do not assume a guessed IP or route is correct.\n5. Back up and review a config change only if your local procedures authorize it; avoid posting file contents or real system values.\n\nTODAY'S LESSON: A node configuration file was edited, and file ownership was later changed with chown so the working user could write it. Changing ownership of a root-managed configuration file is not a routine step: do it only when authorized, and restore the required owner afterward.\n\nFOLLOW-UP: Another config file still needs editing during the next setup session. Record its approved path and required parameter privately, outside this public repository.",
+      "gotcha": "sudo grants elevated permissions; chmod changes permissions, chown changes ownership. Don't broadly loosen access to make configuration edits work.",
+      "tags": [
+        "node setup",
+        "vim",
+        "configuration",
+        "linux",
+        "permissions"
+      ],
+      "updated": "2026-11-12"
+    },
+    {
+      "id": "field-virtual-router-checks-20261112",
+      "title": "Node setup: virtual router (virsh) and router CLI checks",
+      "category": "networking",
+      "command": "sudo virsh list --all\nsudo virsh start <approved-domain>\nshow ip interface brief\nshow running-config",
+      "body": "PURPOSE: Check the virtual router and see which router interfaces are configured and operational.\n\nLINUX HOST:\n- sudo virsh list --all shows all libvirt virtual machines/domains, including shut-off ones. Compare the State column; 'running' means started, not necessarily functional.\n- sudo virsh start <approved-domain> starts a specific, authorized shut-off VM. Confirm its state afterward. Avoid starting a duplicate instance.\n- A first-boot script may initialize network services or virtual machines; do not rerun it casually since provisioning scripts can change live configuration.\n\nROUTER CLI (not Linux shell):\n- show ip interface brief (often abbreviated sh ip int br) summarizes interfaces, addresses, admin Status, and Protocol state.\n- show running-config displays the active router configuration. If an abbreviated command is rejected, try the full syntax in the correct privileged mode.\n- enable enters privileged EXEC mode where authorized; it can prompt for an enable password. Do not post running configurations in this public journal.\n\nNEXT STEP: If a VM reports 'shut off', check whether it should be running and start it only with authorization. If an interface is down, inspect the specific interface and upstream link rather than assuming the VM or whole network failed. If interfaces are up but traffic fails, check routing and reachability separately.",
+      "gotcha": "Router commands run in the router's CLI, not the host's RHEL terminal. 'Status up' is not proof of end-to-end connectivity. Running configurations may expose restricted details.",
+      "tags": [
+        "libvirt",
+        "virsh",
+        "router",
+        "interfaces",
+        "node setup"
+      ],
+      "updated": "2026-11-12"
+    },
+    {
+      "id": "field-ping-ssh-basics-20261112",
+      "title": "Node setup: verify reachability and open approved SSH sessions",
+      "category": "troubleshooting",
+      "command": "ping -c 3 <approved-target>\nssh <user>@<approved-host>",
+      "body": "PURPOSE: Test reachability first, then try authenticated remote access.\n\n- ping sends ICMP echo requests. Replies show the target responds to ICMP; packet loss and latency help assess that path. A failed ping can also mean ICMP is filtered or the route is absent.\n- Use Ctrl+C to stop a continuous ping and print its statistics; -c 3 runs exactly three probes.\n- ssh <user>@<approved-host> opens an encrypted remote terminal if the server and credentials allow it.\n- On first SSH connection, the client may ask whether to trust the server host key. Verify the fingerprint by an approved independent method before accepting; do not reflexively type yes.\n\nNEXT STEPS:\n- Ping fails: verify target address, local interface, route, peer state, and ICMP policy.\n- Ping succeeds but SSH fails: verify destination SSH service, permitted access, credentials, and firewall rules.\n- SSH reaches a password prompt: the transport and SSH handshake worked; authentication may still fail.",
+      "gotcha": "Do not copy real operational IP addresses, SSH fingerprints, account names, or login banners into public notes.",
+      "tags": [
+        "ping",
+        "ssh",
+        "network",
+        "reachability",
+        "node setup"
+      ],
+      "updated": "2026-11-12"
+    },
+    {
+      "id": "field-service-diagnostics-keyperms-20261112",
+      "title": "Node setup: service logs, restart failures, and private-key permissions",
+      "category": "troubleshooting",
+      "command": "sudo systemctl status <approved-service>\nsudo journalctl -u <approved-service> -n 50 --no-pager\nsudo journalctl -u <approved-service> -f\nls -l /path/to/approved/private-key",
+      "body": "PURPOSE: Find out WHY a service fails instead of endlessly restarting it.\n\n- systemctl status displays whether a service is active, failed, or repeatedly restarting.\n- journalctl -u ... -n 50 --no-pager shows the last 50 service log lines without paging; -f follows new log entries live (Ctrl+C exits).\n- sudo systemctl restart <approved-service> requests a restart; use only when authorized and after capturing the initial error.\n- ls -l shows the current permissions and ownership of a file. If a service warns that a private key is readable too broadly, check its documented owner/mode and correct them using approved procedures.\n- chmod 400 <approved-private-key> means owner read-only and no access for group/others. It is sometimes appropriate for private keys, but the service account must actually be able to read the key. chmod 644 would make it world-readable and should NOT be used for private keys.\n\nWHAT TODAY'S SCREENSHOTS DEMONSTRATED:\n- A service displayed a private-key permissions warning as well as a SEPARATE fatal missing-interface/configuration error.\n- Addressing permissions alone would not resolve the missing-interface error or the resulting restart/crash loop.\n\nNEXT STEPS:\n1. Record the first fatal error separately from warnings.\n2. Verify required interfaces/settings are actually present using approved configuration sources.\n3. Fix only the authorized root cause(s), then restart once and check whether the exact fatal message returns.\n4. If failures persist, collect an approved, sanitized error summary for the system maintainer.",
+      "gotcha": "A warning about permissions and a fatal configuration error can coexist. Fixing the warning does not prove the crash is fixed. Never publish real private keys, IPs, or service configuration.",
+      "tags": [
+        "systemctl",
+        "journalctl",
+        "chmod",
+        "permissions",
+        "services",
+        "troubleshooting"
+      ],
+      "updated": "2026-11-12"
     }
   ]
 }
